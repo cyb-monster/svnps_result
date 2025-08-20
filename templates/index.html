@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>R.K Swami Vivekanand Public School</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header-container">
+        <img src="{{ url_for('static', filename='logo.jpg') }}" alt="School Logo" class="school-logo">
+        <div class="headings">
+            <h1 class="school-title">R.K Swami Vivekanand Public School</h1>
+            <h2 class="result-heading">Get your result</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Search Student</h2>
+        <form method="post">
+
+            <label>Select Exam:</label><br>
+            <select name="exam_select" required onchange="this.form.submit()">
+                <option value="">-- Select Exam --</option>
+                {% for excel in excel_files %}
+                    <option value="{{ excel }}" {% if excel == selected_excel %}selected{% endif %}>{{ excel }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+
+            {% if selected_excel %}
+                <label>Select Class:</label><br>
+                <select name="class_select" required>
+                    <option value="">-- Select Class --</option>
+                    {% for cls in classes %}
+                        <option value="{{ cls }}" {% if cls == selected_class %}selected{% endif %}>{{ cls }}</option>
+                    {% endfor %}
+                </select>
+                <br><br>
+
+                <label>Enter Roll Number:</label><br>
+                <input type="text" name="roll_search" value="{{ roll_query }}" placeholder="Enter roll number" required/>
+                <br><br>
+
+                <input type="submit" value="Search"/>
+            {% endif %}
+        </form>
+
+        {% if message %}
+            <p class="error-message">{{ message }}</p>
+        {% endif %}
+
+        {% if student_info %}
+            <div class="result-header">
+                Student Found in Class {{ selected_class }} (Exam: {{ selected_excel }})
+            </div>
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in student_info.items() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>
